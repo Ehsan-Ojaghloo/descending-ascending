@@ -3,27 +3,29 @@ import "./App.scss"
 
 function App() {
 
-  const [products , setProducts] = useState([]);
+  const [newUsers , setNewUsers] = useState([]);
 
-  useEffect(()=>{
-    fetch('https://api.escuelajs.co/api/v1/products?offset=3&limit=8')
-      .then(res => res.json())
-      .then((output) => {
-        console.log(output)
-        setProducts(output)
+  const query = useRef();
+  const input = useRef();
+
+  function btn() {
+    fetch('https://dummyjson.com/users/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: `${query.current.value}`,
+        lastName: `${input.current.value}`
       })
-  }, [])
+    })
+    .then(res => res.json())
+    .then(console.log);
+  }
 
   return (
     <div className='items-con'>
-      {products.map((data) =>(
-        <div key={data.id} className='items'>
-          <img src={data.images}/> 
-          <h1><b>{data.title}</b></h1>
-          <h2>{data.price}</h2>
-          <hr/>
-        </div>
-      ))}
+      <input type="text" ref={query} id='firstName' placeholder='First Name'/>
+      <input type="text" ref={input}  id='lastName' placeholder='Last Name'/>
+      <button className='add-btn' onClick={btn}> Add </button>
     </div>
   )
 }
